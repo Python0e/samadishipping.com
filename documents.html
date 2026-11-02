@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Document Portal | Samadi Shipping Line Logistics</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+</head>
+<body class="min-h-screen bg-slate-100 font-sans text-slate-900">
+    <div class="min-h-screen lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside class="flex flex-col bg-[#09243e] text-slate-100">
+            <a href="/" class="flex items-center gap-3 border-b border-white/10 px-6 py-6">
+                <span class="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white"><i class="fa-solid fa-anchor"></i></span>
+                <span><strong class="block text-lg leading-5">SAMADI</strong><small class="block text-xs tracking-widest text-slate-300">SHIPPING LINE</small></span>
+            </a>
+            <nav class="space-y-2 px-3 py-5" aria-label="Admin navigation">
+                <a href="/" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-house w-4"></i>Dashboard</a>
+                <a href="documents.html" class="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold text-white"><i class="fa-solid fa-cube w-4"></i>Manage shipments</a>
+                <a href="customers.html" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-users w-4"></i>Client profiles</a>
+                <a href="invoices.html" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-file-invoice-dollar w-4"></i>Invoices</a>
+            </nav>
+            <div class="mt-auto border-t border-white/10 p-4">
+                <a href="/" class="flex items-center gap-3 text-sm text-slate-200 hover:text-white"><i class="fa-solid fa-arrow-left w-4"></i>Back to dashboard</a>
+            </div>
+        </aside>
+        <main class="min-w-0 p-4 sm:p-7">
+            <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+                <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">Private administration</p><h1 class="mt-1 text-2xl font-bold text-slate-950">Manage Shipment Documents</h1><p class="mt-2 text-sm text-slate-500">Review shipment information, upload files, and update cargo records.</p></div>
+                <a href="customers.html" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-[#0a3256] hover:border-[#0a3256]"><i class="fa-solid fa-user-plus"></i>Client profiles</a>
+            </header>
+            <div class="grid gap-5 xl:grid-cols-[290px_minmax(0,1fr)]">
+        <aside class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+            <div class="mb-3 border-b border-slate-100 px-2 pb-3"><p class="text-xs font-bold uppercase tracking-wider text-blue-700">Shipment records</p><h2 class="mt-1 text-lg font-bold text-slate-900">Document portal</h2></div>
+            <div id="document-list" class="space-y-1"></div>
+        </aside>
+        <section id="portal-content" class="hidden space-y-5">
+            <div class="flex flex-wrap items-end justify-between gap-3">
+                <div><p class="text-xs font-bold uppercase tracking-wider text-blue-700">Shipment document</p><h2 id="document-title" class="mt-1 text-2xl font-bold text-slate-950"></h2><p id="document-customer" class="mt-1 text-sm text-slate-500"></p></div>
+                <div class="flex gap-3"><button id="new-document-button" type="button" class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:border-[#0a3256]"><i class="mr-2 fa-solid fa-plus"></i>New shipment document</button><button id="save-button" type="button" class="rounded-lg bg-[#0a2d4d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#123e65]"><i class="mr-2 fa-solid fa-floppy-disk"></i>Save changes</button></div>
+            </div>
+            <p id="portal-message" class="min-h-5 text-sm" role="status" aria-live="polite"></p>
+            <form id="document-form" class="grid gap-5 xl:grid-cols-3">
+                <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"><h3 class="bg-[#0a2d4d] px-4 py-3 text-sm font-bold uppercase text-white"><i class="mr-2 fa-solid fa-ship"></i>General info</h3><div class="grid divide-y divide-slate-100" id="general-fields"></div></section>
+                <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"><h3 class="bg-[#0a2d4d] px-4 py-3 text-sm font-bold uppercase text-white"><i class="mr-2 fa-solid fa-calendar-check"></i>Booking</h3><div class="grid divide-y divide-slate-100" id="booking-fields"></div></section>
+                <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"><h3 class="bg-[#0a2d4d] px-4 py-3 text-sm font-bold uppercase text-white"><i class="mr-2 fa-solid fa-note-sticky"></i>Loading & shipping note</h3><textarea name="note" maxlength="2000" class="min-h-56 w-full resize-y bg-white p-4 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-100"></textarea></section>
+            </form>
+            <section class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><div class="flex flex-wrap items-center justify-between gap-3"><div><h3 class="font-bold text-slate-900"><i class="mr-2 text-blue-700 fa-solid fa-paperclip"></i>Files</h3><p class="mt-1 text-sm text-slate-500">PDF, image, Word, or spreadsheet files up to 10 MB.</p></div></div><form id="upload-form" class="mt-4"><label id="upload-dropzone" for="upload-input" class="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-5 py-7 text-center transition hover:border-[#0a3256] hover:bg-blue-50"><i class="fa-solid fa-cloud-arrow-up text-2xl text-[#0a3256]"></i><strong class="mt-3 text-sm text-slate-700">Drop a document here or browse files</strong><span class="mt-1 text-xs text-slate-500">PDF, PNG, JPG, DOC, DOCX, XLS, or XLSX · Maximum 10 MB</span><span id="selected-file" class="mt-3 hidden rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800"></span><input id="upload-input" name="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" required class="sr-only"></label><div class="mt-3 flex justify-end"><button id="upload-button" class="rounded-lg bg-[#0a2d4d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#123e65] disabled:cursor-not-allowed disabled:opacity-60"><i class="mr-2 fa-solid fa-upload"></i>Upload document</button></div></form><div id="file-list" class="mt-4 divide-y divide-slate-100"></div></section>
+            <section class="rounded-xl border border-slate-200 bg-white shadow-sm"><h3 class="border-b border-slate-200 px-4 py-3 font-bold text-slate-900"><i class="mr-2 text-blue-700 fa-solid fa-car"></i>Vehicles | List of shipped vehicles</h3><div class="overflow-x-auto"><table class="w-full min-w-[600px] text-left text-sm"><thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="px-4 py-3">Model</th><th class="px-4 py-3">VIN</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Location</th><th class="px-4 py-3">Date</th></tr></thead><tbody id="vehicle-list" class="divide-y divide-slate-100"></tbody></table></div></section>
+        </section>
+        <p id="loading-message" class="text-slate-500">Loading shipment documents...</p>
+            </div>
+        </main>
+    </div>
+    <dialog id="new-document-dialog" class="w-full max-w-xl rounded-xl border border-slate-200 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-950/50">
+        <form id="new-document-form" class="space-y-4 p-6">
+            <div class="flex items-start justify-between gap-4"><div><p class="text-xs font-bold uppercase tracking-wider text-blue-700">Staff document portal</p><h2 class="mt-1 text-xl font-bold text-slate-950">Create shipment document</h2><p class="mt-2 text-sm text-slate-500">Save shipment details first, then attach PDFs or other files in the document workspace.</p></div><button id="close-new-document" type="button" aria-label="Close form" class="text-xl text-slate-400 hover:text-slate-700">&times;</button></div>
+            <label class="block text-sm font-semibold text-slate-700">Client account<select id="new-customer-id" name="customerId" required class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></select></label>
+            <div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm font-semibold text-slate-700">Load number<input name="loadNumber" required maxlength="200" placeholder="SSL-2026-1060" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></label><label class="block text-sm font-semibold text-slate-700">Booking<input name="booking" maxlength="200" placeholder="BK-850123" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></label></div>
+            <div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm font-semibold text-slate-700">Container number<input name="containerNumber" required maxlength="200" placeholder="MSCU 1234567" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></label><label class="block text-sm font-semibold text-slate-700">Destination<input name="destination" required maxlength="200" placeholder="Dubai, AE" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></label></div>
+            <div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm font-semibold text-slate-700">Vessel<input name="vessel" maxlength="200" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></label><label class="block text-sm font-semibold text-slate-700">ETA<input name="eta" type="date" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></label></div>
+            <label class="block text-sm font-semibold text-slate-700">Loading and shipping note<textarea name="note" maxlength="2000" class="mt-1.5 min-h-24 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-[#0a3256]"></textarea></label>
+            <p id="new-document-message" class="min-h-5 text-sm" role="status" aria-live="polite"></p>
+            <button id="create-document-button" class="w-full rounded-lg bg-[#0a2d4d] px-4 py-3 font-semibold text-white hover:bg-[#123e65]"><i class="mr-2 fa-solid fa-folder-plus"></i>Create document and add files</button>
+        </form>
+    </dialog>
+    <script>
+        const generalFields = [["loadNumber", "Load #"], ["booking", "Booking"], ["containerNumber", "Container"], ["size", "Size"], ["exportDate", "Export date"], ["consignee", "Consignee"], ["notifyAgent", "Notify agent"], ["shipper", "Shipper"]];
+        const bookingFields = [["eta", "ETA"], ["location", "Location"], ["destination", "Destination"], ["vessel", "Vessel"], ["sealNumber", "Seal #"], ["steamshipLine", "Steamship line"], ["terminal", "Terminal"], ["voyageNumber", "Voyage #"]];
+        const uploadInput = document.querySelector("#upload-input");
+        const uploadDropzone = document.querySelector("#upload-dropzone");
+        const uploadButton = document.querySelector("#upload-button");
+        const selectedFile = document.querySelector("#selected-file");
+        const newDocumentDialog = document.querySelector("#new-document-dialog");
+        const newDocumentForm = document.querySelector("#new-document-form");
+        const newDocumentMessage = document.querySelector("#new-document-message");
+        const createDocumentButton = document.querySelector("#create-document-button");
+        let currentDocument;
+        let customers = [];
+
+        function fieldMarkup([name, label]) { return `<label class="grid grid-cols-[150px_1fr] items-center gap-3 px-4 py-2.5 text-sm"><span class="font-semibold uppercase text-slate-500">${label}</span><input name="${name}" class="w-full rounded border border-slate-200 bg-white px-2 py-1 text-slate-900 outline-none focus:border-[#0a3256] focus:ring-2 focus:ring-blue-100" maxlength="200" required></label>`; }
+        document.querySelector("#general-fields").innerHTML = generalFields.map(fieldMarkup).join("");
+        document.querySelector("#booking-fields").innerHTML = bookingFields.map(fieldMarkup).join("");
+
+        function message(text, error = false) { const element = document.querySelector("#portal-message"); element.textContent = text; element.className = `min-h-5 text-sm ${error ? "text-red-400" : "text-emerald-400"}`; }
+        function redirectToLogin() { window.location.replace("/admin-login.html"); }
+
+        async function request(url, options) {
+            const response = await fetch(url, options);
+            if (response.status === 401) { redirectToLogin(); return null; }
+            return response;
+        }
+
+        function renderList(documents) {
+            const list = document.querySelector("#document-list");
+            list.replaceChildren(...documents.map((record) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "w-full rounded-lg px-3 py-3 text-left hover:bg-slate-100";
+                button.innerHTML = `<strong class="block text-sm text-slate-900">${record.loadNumber}</strong><span class="mt-1 block text-xs text-slate-500">${record.containerNumber} · ${record.customerName}</span>`;
+                button.addEventListener("click", () => loadDocument(record.id));
+                return button;
+            }));
+        }
+
+        function renderCustomerOptions() {
+            const select = document.querySelector("#new-customer-id");
+            select.replaceChildren(new Option("Choose a client account", ""));
+            customers.forEach((customer) => select.add(new Option(`${customer.name} (${customer.email})`, customer.id)));
+        }
+
+        function renderDocument(record) {
+            currentDocument = record;
+            window.document.querySelector("#document-title").textContent = `${record.loadNumber} · ${record.containerNumber}`;
+            window.document.querySelector("#document-customer").textContent = record.destination;
+            for (const [name] of [...generalFields, ...bookingFields]) window.document.querySelector(`[name="${name}"]`).value = record[name] || "";
+            window.document.querySelector('[name="note"]').value = record.note || "";
+            const fileList = window.document.querySelector("#file-list");
+            fileList.replaceChildren(...record.files.map((file) => {
+                const row = window.document.createElement("a");
+                row.href = `/api/documents/${encodeURIComponent(record.id)}/files/${encodeURIComponent(file.id)}`;
+                row.className = "flex items-center justify-between gap-3 py-3 text-sm text-slate-700 hover:text-[#0a3256]";
+                row.innerHTML = `<span><i class="mr-2 text-blue-700 fa-solid fa-file"></i>${file.originalName}</span><span class="text-xs text-slate-500">${Math.ceil(file.size / 1024)} KB</span>`;
+                return row;
+            }));
+            if (!record.files.length) fileList.textContent = "No files uploaded yet.";
+            const vehicleList = window.document.querySelector("#vehicle-list");
+            vehicleList.replaceChildren(...record.vehicles.map((vehicle) => {
+                const row = vehicleList.insertRow();
+                [vehicle.model, vehicle.vin, vehicle.status, vehicle.location, vehicle.date].forEach((value) => { const cell = row.insertCell(); cell.className = "px-4 py-3 text-slate-700"; cell.textContent = value; });
+                return row;
+            }));
+            if (!record.vehicles.length) vehicleList.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-slate-500">No vehicles are assigned to this shipment.</td></tr>';
+            window.document.querySelector("#loading-message").classList.add("hidden");
+            window.document.querySelector("#portal-content").classList.remove("hidden");
+        }
+
+        async function loadDocument(id) {
+            const response = await request(`/api/documents/${encodeURIComponent(id)}`);
+            if (!response) return;
+            if (!response.ok) { message("Unable to load shipment document.", true); return; }
+            renderDocument((await response.json()).document);
+        }
+
+        function setSelectedFile(file) {
+            const allowedExtensions = [".pdf", ".png", ".jpg", ".jpeg", ".doc", ".docx", ".xls", ".xlsx"];
+            const extension = file ? `.${file.name.split(".").pop().toLowerCase()}` : "";
+            if (!file) {
+                selectedFile.classList.add("hidden");
+                selectedFile.textContent = "";
+                return true;
+            }
+            if (!allowedExtensions.includes(extension) || file.size > 10 * 1024 * 1024) {
+                uploadInput.value = "";
+                selectedFile.classList.add("hidden");
+                message("Choose a supported file no larger than 10 MB.", true);
+                return false;
+            }
+            selectedFile.textContent = `${file.name} · ${Math.ceil(file.size / 1024)} KB`;
+            selectedFile.classList.remove("hidden");
+            return true;
+        }
+
+        uploadInput.addEventListener("change", () => setSelectedFile(uploadInput.files[0]));
+        ["dragenter", "dragover"].forEach((eventName) => uploadDropzone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            uploadDropzone.classList.add("border-blue-500", "bg-blue-500/10");
+        }));
+        ["dragleave", "drop"].forEach((eventName) => uploadDropzone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            uploadDropzone.classList.remove("border-blue-500", "bg-blue-500/10");
+        }));
+        uploadDropzone.addEventListener("drop", (event) => {
+            const [file] = event.dataTransfer.files;
+            if (!setSelectedFile(file)) return;
+            const files = new DataTransfer();
+            files.items.add(file);
+            uploadInput.files = files.files;
+        });
+
+        document.querySelector("#save-button").addEventListener("click", async () => {
+            if (!currentDocument) return;
+            const response = await request(`/api/documents/${encodeURIComponent(currentDocument.id)}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(document.querySelector("#document-form")))) });
+            if (!response) return;
+            if (!response.ok) { message((await response.json()).error || "Unable to save changes.", true); return; }
+            renderDocument((await response.json()).document);
+            message("Shipment document saved.");
+        });
+
+        document.querySelector("#new-document-button").addEventListener("click", () => {
+            newDocumentMessage.textContent = "";
+            newDocumentForm.reset();
+            newDocumentDialog.showModal();
+        });
+        document.querySelector("#close-new-document").addEventListener("click", () => newDocumentDialog.close());
+        newDocumentForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            createDocumentButton.disabled = true;
+            newDocumentMessage.textContent = "Creating shipment document...";
+            try {
+                const response = await request("/api/documents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(newDocumentForm))) });
+                if (!response) return;
+                const result = await response.json();
+                if (!response.ok) { newDocumentMessage.textContent = result.error || "Unable to create shipment document."; newDocumentMessage.className = "min-h-5 text-sm text-red-400"; return; }
+                newDocumentDialog.close();
+                await loadDocumentList();
+                await loadDocument(result.document.id);
+                message("Shipment document created. You can now upload its PDF.");
+            } catch (error) {
+                console.error("Shipment document creation failed:", error);
+                newDocumentMessage.textContent = "Unable to create shipment document. Please try again.";
+                newDocumentMessage.className = "min-h-5 text-sm text-red-400";
+            } finally {
+                createDocumentButton.disabled = false;
+            }
+        });
+
+        document.querySelector("#upload-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!currentDocument) return;
+            if (!setSelectedFile(uploadInput.files[0])) return;
+            uploadButton.disabled = true;
+            uploadButton.innerHTML = '<i class="mr-2 fa-solid fa-spinner fa-spin"></i>Uploading...';
+            try {
+                const response = await request(`/api/documents/${encodeURIComponent(currentDocument.id)}/files`, { method: "POST", body: new FormData(event.currentTarget) });
+                if (!response) return;
+                if (!response.ok) { message((await response.json()).error || "Unable to upload file.", true); return; }
+                event.currentTarget.reset();
+                setSelectedFile(null);
+                await loadDocument(currentDocument.id);
+                message("File uploaded.");
+            } catch (error) {
+                console.error("Document upload failed:", error);
+                message("Unable to upload file. Please try again.", true);
+            } finally {
+                uploadButton.disabled = false;
+                uploadButton.innerHTML = '<i class="mr-2 fa-solid fa-upload"></i>Upload document';
+            }
+        });
+
+        async function loadDocumentList() {
+            const response = await request("/api/documents");
+            if (!response) return [];
+            if (!response.ok) throw new Error("Unable to load documents.");
+            const { documents } = await response.json();
+            renderList(documents);
+            return documents;
+        }
+
+        Promise.all([loadDocumentList(), request("/api/customers")]).then(async ([documents, customerResponse]) => {
+            if (!customerResponse) return;
+            if (!customerResponse.ok) throw new Error("Unable to load customer accounts.");
+            customers = (await customerResponse.json()).customers;
+            renderCustomerOptions();
+            const requestedDocumentId = new URLSearchParams(window.location.search).get("document");
+            const selectedDocument = documents.find((document) => document.id === requestedDocumentId) || documents[0];
+            if (selectedDocument) await loadDocument(selectedDocument.id);
+            else document.querySelector("#loading-message").textContent = "No shipment documents are available.";
+        }).catch((error) => { document.querySelector("#loading-message").textContent = error.message; });
+    </script>
+</body>
+</html>

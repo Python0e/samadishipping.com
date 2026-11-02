@@ -1,0 +1,18 @@
+{
+  "name": "Samadi Shipping Line Logistics",
+  "short_name": "Samadi Shipping",
+  "description": "Private operations hub for Samadi Shipping Line Logistics.",
+  "start_url": "/admin-login.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

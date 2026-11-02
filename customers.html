@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Customer Accounts | Samadi Shipping Line Logistics</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+</head>
+<body class="min-h-screen bg-[#0d1117] font-sans text-slate-200">
+    <header class="border-b border-slate-800 bg-[#161b22] px-4 py-3"><div class="mx-auto flex max-w-6xl items-center justify-between gap-4"><a href="/" class="flex items-center gap-3 text-white"><span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-lg font-bold">S</span><span><strong class="block text-sm uppercase tracking-wide">Samadi Shipping</strong><small class="text-xs tracking-widest text-slate-400">LINE LOGISTICS</small></span></a><a href="/" class="text-sm font-semibold text-blue-400 hover:text-blue-300"><i class="mr-2 fa-solid fa-arrow-left"></i>Back to dashboard</a></div></header>
+    <main class="mx-auto grid max-w-6xl gap-6 p-5 lg:grid-cols-[380px_minmax(0,1fr)]">
+        <section class="rounded-xl border border-slate-800 bg-[#161b22] p-5">
+            <p class="text-xs font-bold uppercase tracking-wider text-blue-400">Staff only</p>
+            <h1 class="mt-1 text-2xl font-bold text-white">Create client account</h1>
+            <p class="mt-3 text-sm leading-6 text-slate-400">Create the client login here, then share the initial password through your approved secure channel.</p>
+            <form id="customer-form" class="mt-6 space-y-4">
+                <label class="block text-sm font-semibold">Client name<input name="name" required maxlength="100" autocomplete="name" class="mt-2 w-full rounded-lg border border-slate-700 bg-[#0d1117] px-3 py-2.5 text-white outline-none focus:border-blue-500"></label>
+                <label class="block text-sm font-semibold">Company<input name="company" maxlength="100" autocomplete="organization" class="mt-2 w-full rounded-lg border border-slate-700 bg-[#0d1117] px-3 py-2.5 text-white outline-none focus:border-blue-500"></label>
+                <label class="block text-sm font-semibold">Email address<input name="email" type="email" required maxlength="254" autocomplete="email" class="mt-2 w-full rounded-lg border border-slate-700 bg-[#0d1117] px-3 py-2.5 text-white outline-none focus:border-blue-500"></label>
+                <label class="block text-sm font-semibold">Initial password<input name="password" type="password" required minlength="6" autocomplete="new-password" class="mt-2 w-full rounded-lg border border-slate-700 bg-[#0d1117] px-3 py-2.5 text-white outline-none focus:border-blue-500"></label>
+                <button id="create-button" class="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"><i class="mr-2 fa-solid fa-user-plus"></i>Create account</button>
+                <p id="form-message" class="min-h-5 text-sm" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+        <section class="rounded-xl border border-slate-800 bg-[#161b22]">
+            <div class="border-b border-slate-800 p-5"><p class="text-xs font-bold uppercase tracking-wider text-blue-400">Private client backend</p><h2 class="mt-1 text-xl font-bold text-white">Customer accounts</h2><p class="mt-2 text-sm text-slate-400">Only staff can create accounts. Passwords are never displayed or returned.</p></div>
+            <div class="overflow-x-auto"><table class="w-full min-w-[560px] text-left text-sm"><thead class="bg-slate-900 text-xs uppercase text-slate-500"><tr><th class="px-5 py-3">Client</th><th class="px-5 py-3">Company</th><th class="px-5 py-3">Email</th></tr></thead><tbody id="customer-list" class="divide-y divide-slate-800"></tbody></table></div>
+        </section>
+    </main>
+    <script>
+        const form = document.querySelector("#customer-form");
+        const submitButton = document.querySelector("#create-button");
+        const message = document.querySelector("#form-message");
+        function showMessage(text, error = false) { message.textContent = text; message.className = `min-h-5 text-sm ${error ? "text-red-400" : "text-emerald-400"}`; }
+        function redirectToLogin() { window.location.replace("/admin-login.html"); }
+        function renderCustomers(customers) {
+            const list = document.querySelector("#customer-list");
+            list.replaceChildren(...customers.map((customer) => {
+                const row = list.insertRow();
+                [[customer.name, "font-semibold text-white"], [customer.company || "—", "text-slate-300"], [customer.email, "text-slate-400"]].forEach(([value, classes]) => { const cell = row.insertCell(); cell.className = `px-5 py-4 ${classes}`; cell.textContent = value; });
+                return row;
+            }));
+        }
+        async function loadCustomers() {
+            const response = await fetch("/api/customers");
+            if (response.status === 401) { redirectToLogin(); return; }
+            if (!response.ok) throw new Error("Unable to load customer accounts.");
+            renderCustomers((await response.json()).customers);
+        }
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            submitButton.disabled = true;
+            showMessage("Creating account...");
+            try {
+                const response = await fetch("/api/customers", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+                const result = await response.json();
+                if (response.status === 401) { redirectToLogin(); return; }
+                if (!response.ok) { showMessage(result.error || "Unable to create account.", true); return; }
+                form.reset();
+                showMessage(`Account created for ${result.customer.name}.`);
+                await loadCustomers();
+            } catch (error) {
+                showMessage("Unable to create account. Please try again.", true);
+                console.error("Customer account creation failed:", error);
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+        loadCustomers().catch((error) => showMessage(error.message, true));
+    </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Private cargo operations dashboard for Samadi Shipping Line Logistics.">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard | Samadi Shipping Line Logistics</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#10263f">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+</head>
+<body class="min-h-screen bg-slate-100 font-sans text-slate-900">
+    <div class="min-h-screen lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside class="flex flex-col bg-[#09243e] text-slate-100">
+            <a href="/" class="flex items-center gap-3 border-b border-white/10 px-6 py-6">
+                <span class="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white"><i class="fa-solid fa-anchor"></i></span>
+                <span><strong class="block text-lg leading-5">SAMADI</strong><small class="block text-xs tracking-widest text-slate-300">SHIPPING LINE</small></span>
+            </a>
+            <nav class="space-y-2 px-3 py-5" aria-label="Admin navigation">
+                <a href="/" class="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold text-white"><i class="fa-solid fa-house w-4"></i>Dashboard</a>
+                <a href="documents.html" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-cube w-4"></i>Manage shipments</a>
+                <a href="customers.html" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-users w-4"></i>Client profiles</a>
+                <a href="#quick-invoice" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-file-arrow-up w-4"></i>Upload invoices</a>
+                <button id="settings-button" type="button" class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm text-slate-200 hover:bg-white/10"><i class="fa-solid fa-gear w-4"></i>System settings</button>
+            </nav>
+            <div class="mt-auto border-t border-white/10 p-4">
+                <div class="flex items-center justify-between gap-3"><div class="flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 font-bold">S</span><span><strong class="block text-sm">Samadi</strong><small class="block text-xs text-slate-300">Master admin</small></span></div><button id="admin-logout-button" type="button" aria-label="Sign out" class="text-slate-300 hover:text-white"><i class="fa-solid fa-right-from-bracket"></i></button></div>
+            </div>
+        </aside>
+        <main class="min-w-0 p-4 sm:p-7">
+            <header class="flex flex-wrap items-center justify-between gap-4">
+                <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">Private administration</p><h1 class="mt-1 text-2xl font-bold text-slate-950">Dashboard: Active Ocean Freight Cargo</h1></div>
+                <div class="flex w-full gap-3 sm:w-auto"><label class="relative flex-1 sm:w-64"><i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input id="pipeline-search" type="search" placeholder="Search bookings, clients..." class="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-[#0a3256]"></label><a href="documents.html" class="inline-flex items-center gap-2 rounded-lg bg-[#0a2d4d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#123e65]"><i class="fa-solid fa-plus"></i>New shipment</a></div>
+            </header>
+            <p id="dashboard-message" class="mt-4 min-h-5 text-sm" role="status" aria-live="polite"></p>
+            <section class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-200 px-5 py-4"><h2 class="font-bold text-slate-900">Current Cargo Pipeline</h2><p class="mt-1 text-sm text-slate-500">Open a booking to review shipment details and manage files.</p></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[1050px] text-left text-sm">
+                        <thead class="bg-slate-50 text-xs font-bold uppercase tracking-wide text-slate-600"><tr><th class="px-5 py-4">Booking ID</th><th class="px-5 py-4">Client name</th><th class="px-5 py-4">Vessel name</th><th class="px-5 py-4">Container number</th><th class="px-5 py-4">Origin port</th><th class="px-5 py-4">Destination port</th><th class="px-5 py-4">ETA</th><th class="px-5 py-4">Status</th></tr></thead>
+                        <tbody id="pipeline-table" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <p id="pipeline-empty" class="hidden px-5 py-7 text-center text-sm text-slate-500">No cargo records match your search.</p>
+            </section>
+            <section id="quick-invoice" class="mt-6 ml-auto max-w-lg rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900">Quick Invoice Attachment</h2>
+                <p class="mt-1 text-sm text-slate-500">Attach a PDF invoice to a client’s shipment record.</p>
+                <form id="quick-invoice-form" class="mt-5 space-y-4">
+                    <div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm font-medium text-slate-700">Select client<select id="invoice-client" required class="mt-1.5 w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-[#0a3256]"></select></label><label class="block text-sm font-medium text-slate-700">Booking ID<select id="invoice-document" name="documentId" required class="mt-1.5 w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-[#0a3256]"></select></label></div>
+                    <label class="block text-sm font-medium text-slate-700">Document type<select name="documentType" class="mt-1.5 w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-[#0a3256]"><option>Invoice</option><option>Bill of lading</option><option>Commercial invoice</option><option>Other</option></select></label>
+                    <label id="invoice-dropzone" for="invoice-file" class="flex cursor-pointer flex-col items-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center hover:border-[#0a3256] hover:bg-blue-50"><i class="fa-solid fa-file-pdf text-xl text-[#0a3256]"></i><strong class="mt-2 text-sm text-slate-700">Upload PDF invoice</strong><span class="mt-1 text-xs text-slate-500">Drop a PDF here or click to browse · maximum 10 MB</span><span id="invoice-file-name" class="mt-2 hidden rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800"></span><input id="invoice-file" name="file" type="file" accept="application/pdf,.pdf" required class="sr-only"></label>
+                    <label class="block text-sm font-medium text-slate-700">Notes <span class="font-normal text-slate-400">(optional)</span><textarea name="note" maxlength="2000" rows="2" placeholder="Invoice reference or instructions" class="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 outline-none focus:border-[#0a3256]"></textarea></label>
+                    <button id="invoice-upload-button" class="w-full rounded-md bg-[#0a2d4d] px-4 py-3 font-semibold text-white hover:bg-[#123e65]"><i class="mr-2 fa-solid fa-upload"></i>Upload & Attach Invoice</button>
+                </form>
+            </section>
+        </main>
+    </div>
+    <dialog id="settings-dialog" class="w-full max-w-md rounded-xl border border-slate-300 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-950/60"><div class="p-6"><div class="flex justify-between gap-4"><div><p class="text-xs font-bold uppercase tracking-wider text-blue-700">System settings</p><h2 class="mt-1 text-xl font-bold">Admin workspace</h2></div><button id="close-settings" type="button" aria-label="Close settings" class="text-xl text-slate-500 hover:text-slate-900">&times;</button></div><p class="mt-4 text-sm leading-6 text-slate-600">Manage client profiles, shipment records, and invoice attachments through the private admin tools.</p><div class="mt-5 grid gap-3"><a href="customers.html" class="rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold hover:bg-slate-50">Manage client profiles</a><a href="documents.html" class="rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold hover:bg-slate-50">Manage shipment documents</a></div></div></dialog>
+    <script>
+        const pipelineTable = document.querySelector("#pipeline-table");
+        const pipelineEmpty = document.querySelector("#pipeline-empty");
+        const dashboardMessage = document.querySelector("#dashboard-message");
+        const searchInput = document.querySelector("#pipeline-search");
+        const invoiceClient = document.querySelector("#invoice-client");
+        const invoiceDocument = document.querySelector("#invoice-document");
+        const invoiceFile = document.querySelector("#invoice-file");
+        const invoiceFileName = document.querySelector("#invoice-file-name");
+        const invoiceDropzone = document.querySelector("#invoice-dropzone");
+        const invoiceUploadButton = document.querySelector("#invoice-upload-button");
+        const invoiceForm = document.querySelector("#quick-invoice-form");
+        let clients = [];
+        let pipeline = [];
+
+        function returnToLogin() { window.location.replace("/admin-login.html"); }
+        async function requestAdmin(url, options) {
+            const response = await fetch(url, options);
+            if (response.status === 401) { returnToLogin(); return null; }
+            return response;
+        }
+        function showMessage(text, error = false) { dashboardMessage.textContent = text; dashboardMessage.className = `mt-4 min-h-5 text-sm ${error ? "text-red-600" : "text-emerald-700"}`; }
+        function statusClass(status) {
+            if (/transit/i.test(status)) return "bg-blue-100 text-blue-800";
+            if (/delivered/i.test(status)) return "bg-emerald-100 text-emerald-800";
+            if (/origin|berth/i.test(status)) return "bg-amber-100 text-amber-800";
+            if (/customs|delay/i.test(status)) return "bg-orange-100 text-orange-800";
+            return "bg-slate-100 text-slate-700";
+        }
+        function formatDate(value) {
+            if (!value) return "Pending";
+            return new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(`${value}T00:00:00`));
+        }
+        function renderPipeline(records) {
+            pipelineTable.replaceChildren(...records.map((record) => {
+                const row = document.createElement("tr");
+                row.className = "cursor-pointer hover:bg-blue-50";
+                row.addEventListener("click", () => window.location.assign(`documents.html?document=${encodeURIComponent(record.id)}`));
+                const values = [record.bookingId, record.clientName, record.vesselName, record.containerNumber, record.originPort, record.destinationPort, formatDate(record.eta)];
+                values.forEach((value) => { const cell = row.insertCell(); cell.className = "px-5 py-4 text-slate-700"; cell.textContent = value; });
+                const status = row.insertCell();
+                status.className = "px-5 py-4";
+                const badge = document.createElement("span");
+                badge.className = `inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusClass(record.status)}`;
+                badge.textContent = record.status;
+                status.append(badge);
+                return row;
+            }));
+            pipelineEmpty.classList.toggle("hidden", records.length > 0);
+        }
+        function renderClientOptions() {
+            invoiceClient.replaceChildren(new Option("Select client", ""));
+            clients.forEach((client) => invoiceClient.add(new Option(client.company || client.name, client.id)));
+            updateDocumentOptions();
+        }
+        function updateDocumentOptions() {
+            const clientId = invoiceClient.value;
+            invoiceDocument.replaceChildren(new Option("Select booking", ""));
+            pipeline.filter((record) => record.clientId === clientId).forEach((record) => invoiceDocument.add(new Option(`${record.bookingId} · ${record.containerNumber}`, record.id)));
+        }
+        function setInvoiceFile(file) {
+            if (!file || file.type !== "application/pdf" || file.size > 10 * 1024 * 1024) {
+                invoiceFile.value = "";
+                invoiceFileName.classList.add("hidden");
+                showMessage("Choose a PDF invoice no larger than 10 MB.", true);
+                return false;
+            }
+            invoiceFileName.textContent = `${file.name} · ${Math.ceil(file.size / 1024)} KB`;
+            invoiceFileName.classList.remove("hidden");
+            return true;
+        }
+        async function loadDashboard() {
+            const [clientResponse, pipelineResponse] = await Promise.all([requestAdmin("/api/customers"), requestAdmin("/api/admin/pipeline")]);
+            if (!clientResponse || !pipelineResponse) return;
+            if (!clientResponse.ok || !pipelineResponse.ok) throw new Error("Unable to load dashboard data.");
+            clients = (await clientResponse.json()).customers;
+            pipeline = (await pipelineResponse.json()).pipeline;
+            renderClientOptions();
+            renderPipeline(pipeline);
+        }
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.trim().toLowerCase();
+            renderPipeline(pipeline.filter((record) => Object.values(record).some((value) => String(value).toLowerCase().includes(query))));
+        });
+        invoiceClient.addEventListener("change", updateDocumentOptions);
+        invoiceFile.addEventListener("change", () => setInvoiceFile(invoiceFile.files[0]));
+        ["dragenter", "dragover"].forEach((eventName) => invoiceDropzone.addEventListener(eventName, (event) => { event.preventDefault(); invoiceDropzone.classList.add("border-[#0a3256]", "bg-blue-50"); }));
+        ["dragleave", "drop"].forEach((eventName) => invoiceDropzone.addEventListener(eventName, (event) => { event.preventDefault(); invoiceDropzone.classList.remove("border-[#0a3256]", "bg-blue-50"); }));
+        invoiceDropzone.addEventListener("drop", (event) => {
+            const [file] = event.dataTransfer.files;
+            if (!setInvoiceFile(file)) return;
+            const files = new DataTransfer();
+            files.items.add(file);
+            invoiceFile.files = files.files;
+        });
+        invoiceForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!invoiceDocument.value || !setInvoiceFile(invoiceFile.files[0])) return;
+            invoiceUploadButton.disabled = true;
+            invoiceUploadButton.innerHTML = '<i class="mr-2 fa-solid fa-spinner fa-spin"></i>Uploading invoice...';
+            try {
+                const formData = new FormData(invoiceForm);
+                const response = await requestAdmin(`/api/documents/${encodeURIComponent(invoiceDocument.value)}/files`, { method: "POST", body: formData });
+                if (!response) return;
+                if (!response.ok) { showMessage((await response.json()).error || "Unable to upload invoice.", true); return; }
+                invoiceForm.reset();
+                invoiceFileName.classList.add("hidden");
+                updateDocumentOptions();
+                showMessage("Invoice uploaded and attached to the booking.");
+                await loadDashboard();
+            } catch (error) {
+                console.error("Invoice upload failed:", error);
+                showMessage("Unable to upload invoice. Please try again.", true);
+            } finally {
+                invoiceUploadButton.disabled = false;
+                invoiceUploadButton.innerHTML = '<i class="mr-2 fa-solid fa-upload"></i>Upload & Attach Invoice';
+            }
+        });
+        document.querySelector("#settings-button").addEventListener("click", () => document.querySelector("#settings-dialog").showModal());
+        document.querySelector("#close-settings").addEventListener("click", () => document.querySelector("#settings-dialog").close());
+        document.querySelector("#admin-logout-button").addEventListener("click", async () => {
+            try {
+                const response = await fetch("/api/logout", { method: "POST" });
+                if (!response.ok) throw new Error("Unable to sign out.");
+                returnToLogin();
+            } catch (error) {
+                console.error("Administrator logout failed:", error);
+                showMessage("Unable to sign out. Please try again.", true);
+            }
+        });
+        loadDashboard().catch((error) => showMessage(error.message, true));
+        if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js").catch((error) => console.error("Unable to register app service worker:", error)));
+    </script>
+</body>
+</html>
